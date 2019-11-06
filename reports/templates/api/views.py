@@ -1,6 +1,6 @@
-from rest_framework_mongoengine import viewsets
 from templates.api.serializers import ToolSerializer
 from templates.api.models import Tool
+from rest_framework_mongoengine import viewsets
 
 
 class ToolViewSet(viewsets.ModelViewSet):
