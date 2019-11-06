@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'mongo_auth',
     'templates',
-    'rest_framework_mongoengine'
+    'rest_framework_mongoengine',
+
 ]
 
 MIDDLEWARE = [
@@ -89,6 +91,17 @@ DATABASES = {
     }
 }
 
+# Minimal settings (all mandatory)
+MANGO_JWT_SETTINGS = {
+    "db_host": "localhost",
+    "db_port": "27017",
+    "db_name": "reports",
+    "db_user": "admin",
+    "db_pass": "admin",
+    "fields": ("username", "email", "password",),
+    "secondary_username_field": "username"
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -107,6 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
 
 
 # Internationalization
