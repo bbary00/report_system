@@ -76,6 +76,3 @@ class UserTests(TestCase):
         res = requests.post(url, data=data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertTrue("token" in res.json()["data"].keys())
-
-
-

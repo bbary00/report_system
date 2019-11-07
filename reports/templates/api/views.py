@@ -4,11 +4,11 @@ from templates.api.serializers import TemplateSerializer, UserSerializer, Report
 from templates.api.models import Template, Report
 from rest_framework_mongoengine import viewsets
 from rest_framework.views import APIView
-from mongo_auth.permissions import AuthenticatedOnly
+from mongo_auth.permissions import AuthenticatedOnly, IsAdminUserOrReadOnly
 
 
 class TemplateViewSet(viewsets.ModelViewSet):
-    permission_classes = [AuthenticatedOnly]
+    permission_classes = [AuthenticatedOnly, IsAdminUserOrReadOnly]
     lookup_field = 'id'
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer

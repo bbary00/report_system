@@ -97,6 +97,7 @@ MANGO_JWT_SETTINGS = {
     "db_name": "reports",
     "db_user": "admin",
     "db_pass": "admin",
+    "auth_collection": "auth_user",
     "fields": ("username", "email", "password",),
     "secondary_username_field": "username"
 }
