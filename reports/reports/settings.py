@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import mongoengine
+from DB_settings import USER, HOST, COLLECTION, PASSWORD, SECRET_KEY
 
 mongoengine.connect(
-    db="reports",
-    host="localhost"
+    db=COLLECTION,
+    host=HOST
 )
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,12 +27,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'sgsjsty+-2el3z*_)aurd5191sg%$j712#fj=bipjnbur-k8a4'
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,16 +88,16 @@ WSGI_APPLICATION = 'reports.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'reports'
+        'NAME': COLLECTION,
+        'HOST': HOST,
+        'USER': USER,
+        'PASSWORD': PASSWORD
     }
 }
 
 MANGO_JWT_SETTINGS = {
-    "db_host": "localhost",
-    "db_port": "27017",
-    "db_name": "reports",
-    "db_user": "admin",
-    "db_pass": "admin",
+    "db_host": HOST,
+    "db_name": COLLECTION,
     "auth_collection": "auth_user",
     "fields": ("username", "email", "password",),
     "secondary_username_field": "username"

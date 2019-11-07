@@ -14,4 +14,4 @@ Django REST api on mongoengine
                        request.user['is_superuser'] or
                        request.method in SAFE_METHODS)
                      
-2. Change mongo-auth/views.py file on one that is stored in auth_view folder.
+2. Change mongo-auth/views.py and mongo-auth/db.py files on ones that are stored in mango_auth_files_to_change folder.
