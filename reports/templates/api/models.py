@@ -8,6 +8,10 @@ class Template(Document):
     inputs = fields.ListField(fields.StringField())
     date = fields.DateTimeField(default=datetime.utcnow())
 
+    meta = {
+        'ordering': ['-date']
+    }
+
     def __str__(self):
         return self.label
 
@@ -17,3 +21,7 @@ class Report(Document):
     template = fields.DictField()
     answers = fields.ListField(fields.StringField())
     date = fields.DateTimeField(default=datetime.utcnow())
+
+    meta = {
+        'ordering': ['-date']
+    }

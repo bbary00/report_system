@@ -91,7 +91,6 @@ DATABASES = {
     }
 }
 
-# Minimal settings (all mandatory)
 MANGO_JWT_SETTINGS = {
     "db_host": "localhost",
     "db_port": "27017",
@@ -121,11 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
