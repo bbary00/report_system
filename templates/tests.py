@@ -21,8 +21,9 @@ class TemplateTests(TestCase):
     def test_get_templates(self):
         """Test to get all templates objects from db without auth"""
         url = BASE_URL + self.URI
+        # Provide and valid token
         headers = {
-            'Authorization': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IklEXzMyOTljZTk5LTQyMjEtNDViZS1iYzA1LWJlZmFkNjQyNzkyYiIsImV4cCI6MTU3MzY1NjkyNH0.jW8JuspCLTPFgwGgGQRau2bO0uTz0yzo4rOSmdPBzMw"
+            'Authorization': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxNTczODA5ODU3fQ.jOkp-CHZcH1KflTFuLm-2-hr0j0vOwmN1aSc7Gy9BVQ"
         }
         res = requests.get(url, headers=headers)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -40,7 +41,7 @@ class TemplateTests(TestCase):
 
         headers = {
             'content-type': 'application/json',
-            'Authorization': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IklEXzMyOTljZTk5LTQyMjEtNDViZS1iYzA1LWJlZmFkNjQyNzkyYiIsImV4cCI6MTU3MzY1NjkyNH0.jW8JuspCLTPFgwGgGQRau2bO0uTz0yzo4rOSmdPBzMw"
+            'Authorization': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwiZXhwIjoxNTczODA5ODU3fQ.jOkp-CHZcH1KflTFuLm-2-hr0j0vOwmN1aSc7Gy9BVQ"
         }
 
         res = requests.post(url, json.dumps(data), headers=headers)
