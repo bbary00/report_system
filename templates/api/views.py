@@ -88,34 +88,44 @@ class ReportViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
 
-@permission_required([IsUserAdmin, AuthenticatedOnly])
-def export_reports(request):
-    """Download all reports if user is admin"""
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="Reports.xls"'
-    # creating workbook
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet("Reports")
-    row_num = 0
-    font_style = xlwt.XFStyle()
-    # headers are bold
-    font_style.font.bold = True
-    # column header names, you can use your own headers here
-    columns = ['Username', 'Email', 'Template Name', 'Inputs', 'Answers', 'Date']
-    # write column headers in sheet
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
+# @permission_required([IsUserAdmin, AuthenticatedOnly])
+# def export_reports(request):
+class LoadViewSet(APIView):
+    """
+    Create and retrieve reports
+    """
+    permission_classes = [AuthenticatedOnly, IsUserAdmin]
+    # queryset = Report.objects.all()
+    # serializer_class = ReportSerializer
 
-    font_style = xlwt.XFStyle()
-    data = ReportSerializer(Report.objects.all(), many=True).data
-    for obj in data:
-        row_num += 1
-        ws.write(row_num, 0, obj['user']['username'], font_style)
-        ws.write(row_num, 1, obj['user']['email'], font_style)
-        ws.write(row_num, 2, obj['template']['label'], font_style)
-        ws.write(row_num, 3, ', '.join(obj['template']['inputs']), font_style)
-        ws.write(row_num, 4, ', '.join(obj['answers']), font_style)
-        ws.write(row_num, 5, obj['date'], font_style)
+    def get(self, request):
+        """Download all reports if user is admin"""
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="Reports.xls"'
+        # creating workbook
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet("Reports")
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        # headers are bold
+        font_style.font.bold = True
+        # column header names, you can use your own headers here
+        columns = ['Username', 'Email', 'Template Name', 'Inputs', 'Answers', 'Date']
+        # write column headers in sheet
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
 
-    wb.save(response)
-    return response
+        font_style = xlwt.XFStyle()
+        data = ReportSerializer(Report.objects.all(), many=True).data
+        for obj in data:
+            row_num += 1
+            ws.write(row_num, 0, obj['user']['username'], font_style)
+            ws.write(row_num, 1, obj['user']['email'], font_style)
+            ws.write(row_num, 2, obj['template']['label'], font_style)
+            ws.write(row_num, 3, ', '.join(obj['template']['inputs']), font_style)
+            ws.write(row_num, 4, ', '.join(obj['answers']), font_style)
+            ws.write(row_num, 5, obj['date'], font_style)
+
+        wb.save(response)
+        return response
+
