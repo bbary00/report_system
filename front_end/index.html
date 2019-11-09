@@ -4,14 +4,56 @@
     <meta charset="UTF-8">
     <title>Test</title>
     <script src="scripts.js"></script>
+    <style>
+        div#templates:hover {
+        background: #786b59; /* Цвет фона под ссылкой */
+        color: #ffe; /* Цвет ссылки */
+        }
+    </style>
 </head>
 <body>
 
-    <form id="signup_form">
-        Email: <input type="email" name="email" placeholder="example@mail.com" id="email"><br>
-        Username <input type="text" name="username" placeholder="example" id="username"><br>
-        Password <input type="password" name="password" placeholder="********" id="password"><br>
-        <input type="submit" value="Submit" onclick="myFunction(event)">
+    <input type="submit" value="Signup" onclick="show_signup()">
+    <input type="submit" value="Login" onclick="show_login()">
+    <input type="submit" value="Templates" onclick="show_templates()">
+    <input type="submit" value="Reports" onclick="show_reports()">
+    <input type="submit" value="Load" onclick="load_reports()">
+    <input type="submit" value="User" onclick="show_user()">
+    <input type="submit" value="Logout" onclick="logout()">
+
+    <form id="signup_form" style="display:none;">
+        Email: <input type="email" name="email" placeholder="example@mail.com" id="sign_email"><br>
+        Username <input type="text" name="username" placeholder="example" id="sign_username"><br>
+        Password <input type="password" name="password" placeholder="********" id="sign_password"><br>
+        <input type="submit" value="Submit" onclick="signup(event)">
+    </form>
+
+    <form id="login_form" style="display:none;">
+        Username <input type="text" name="username" placeholder="example" id="login_username"><br>
+        Password <input type="password" name="password" placeholder="********" id="login_password"><br>
+        <input type="submit" value="Submit" onclick="login(event)">
+    </form>
+
+    <div id="user_page" style="display:none;">
+        <h1>Username: </h1><p id="user_username"></p><br>
+        <h1>Email: </h1><p id="user_email"></p>
+    </div>
+
+    <div id="templates" style="display:none;">
+        <h1>TEMPLATES</h1>
+    </div>
+
+    <div id="reports" style="display:none;">
+        <h1>REPORTS</h1>
+        <input type="text" placeholder="search user" value="" id="report_of_user">
+        <input type="submit" onclick="show_reports(document.getElementById('report_of_user').value)">
+        <div id="report_items">
+        </div>
+    </div>
+
+    <form id="create_report" style="display:none;">
+        <h3>Template name: </h3><p id="template_name"></p>
+        <h4>Template description</h4><p id="template_description"></p>
     </form>
 
 

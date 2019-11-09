@@ -40,7 +40,7 @@ class ReportViewSet(viewsets.ModelViewSet):
     Create and retrieve reports
     """
     permission_classes = [AuthenticatedOnly]
-    queryset = Report.objects.all()
+    queryset = Report.objects.all().order_by('-date')
     serializer_class = ReportSerializer
 
     def create(self, request, *args, **kwargs):
@@ -49,13 +49,12 @@ class ReportViewSet(viewsets.ModelViewSet):
         template = request.data.get('template', {})
         template_id = template.get('id', {})
         if not template_id:
-            return Response({"error": "Template id is not provided"})
+            return Response({"error": "Template id is not provided"}, status=status.HTTP_403_FORBIDDEN)
 
         # Find template with provided id
         template_object = Template.objects.filter(id=template_id)
         if template_object.count() == 1:
             report_object = request.data
-
             # If number of fields in template not equal to provided answers - error
             if len(template_object[0]['inputs']) != len(report_object['answers']):
                 return Response({"error": f"Provided wrong number of inputs. Should be "
@@ -69,7 +68,7 @@ class ReportViewSet(viewsets.ModelViewSet):
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
-            return Response({"error": "Template not found"})
+            return Response({"error": "Template not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def perform_create(self, serializer):
         # Add user object to report
@@ -81,11 +80,12 @@ class ReportViewSet(viewsets.ModelViewSet):
         if self.request.user['is_staff'] or self.request.user['is_staff']:
             query = self.request.GET.get('user')
             if query:
-                qs = self.queryset.filter(user__username=query)
+                qs = self.queryset.filter(user__username=query).order_by('-published_date')
+                print(qs)
                 return qs
             return self.queryset
         # Else return reports of current user
-        return self.queryset.filter(user=self.request.user)
+        return self.queryset.filter(user=self.request.user).order_by('-published_date')
 
 
 # @permission_required([IsUserAdmin, AuthenticatedOnly])
