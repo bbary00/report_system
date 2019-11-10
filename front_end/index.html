@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <title>Test</title>
     <script src="scripts.js"></script>
-    <style>
-        div#templates:hover {
-        background: #786b59; /* Цвет фона под ссылкой */
-        color: #ffe; /* Цвет ссылки */
-        }
-    </style>
+   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 
@@ -17,13 +12,13 @@
     <input type="submit" value="Login" onclick="show_login()">
     <input type="submit" value="Templates" onclick="show_templates()">
     <input type="submit" value="Reports" onclick="show_reports()">
-    <input type="submit" value="Load" onclick="load_reports()">
+    <input type="submit" value="Load" onclick="download_reports()">
     <input type="submit" value="User" onclick="show_user()">
     <input type="submit" value="Logout" onclick="logout()">
 
     <form id="signup_form" style="display:none;">
         Email: <input type="email" name="email" placeholder="example@mail.com" id="sign_email"><br>
-        Username <input type="text" name="username" placeholder="example" id="sign_username"><br>
+        Username <input type="text" name="username" placeholder="example" id="sign_username" maxlength="25"><br>
         Password <input type="password" name="password" placeholder="********" id="sign_password"><br>
         <input type="submit" value="Submit" onclick="signup(event)">
     </form>
@@ -41,6 +36,10 @@
 
     <div id="templates" style="display:none;">
         <h1>TEMPLATES</h1>
+        <input type="submit" value="Create new template" onclick="make_template_form()">
+        <hr>
+        <div id="template_items" title="Choose one to create a report">
+        </div>
     </div>
 
     <div id="reports" style="display:none;">
@@ -52,10 +51,21 @@
     </div>
 
     <form id="create_report" style="display:none;">
-        <h3>Template name: </h3><p id="template_name"></p>
-        <h4>Template description</h4><p id="template_description"></p>
+        <h3 style="display:inline-block">Template name: </h3>
+        <p id="template_name" style="display:inline-block"></p><br>
+        <h4 style="display:inline-block">Template description</h4>
+        <p id="template_description" style="display:inline-block"></p><br>
     </form>
 
+    <form id="create_template" style="display:none;">
+        <h3>Template name: </h3>
+        <input type="text" id="create_template_name" name="label">
+        <h4>Template description</h4>
+        <input type="text" id="create_template_description" name="description">
+        <h4>Template fields (separated by space)</h4>
+        <input type="text" id="create_template_fields" name="inputs"><br>
+        <input type="submit" value="Create template" onclick="create_template(event)">
+    </form>
 
 
 </body>

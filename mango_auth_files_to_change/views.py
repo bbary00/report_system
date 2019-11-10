@@ -14,6 +14,9 @@ from rest_framework.exceptions import ValidationError
 def signup(request):
     try:
         data = request.data if request.data is not None else {}
+        if len(data.get("password")) < 5:
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={"data": {"error_msg": "Password must have at least 5 chars!"}})
         last_obj = database[auth_collection].find().sort('id', pymongo.DESCENDING)
         signup_data = {"id": int(last_obj[0]['id']) + 1}
         all_fields = set(fields + ("email", "password"))
@@ -80,18 +83,19 @@ def login(request):
                                         days=jwt_life)},
                                    jwt_secret, algorithm='HS256').decode('utf-8')
                 try:
-                    database[auth_collection].updateOne(
-                        {secondary_username_field: username},
+                    database[auth_collection].find_one_and_update(
+                        {"username": username},
                         { "$set": {"last_login": datetime.datetime.now()}}
                     )
                 except Exception as error:
-                    print(error)
+                    return Response(status=status.HTTP_403_FORBIDDEN,
+                                    data={"error_msg": str(error)})
 
                 return Response(status=status.HTTP_200_OK,
                                 data={"data": {"token": token}})
             else:
                 return Response(status=status.HTTP_403_FORBIDDEN,
-                                data={"error_msg": messages.incorrect_password})
+                                data={"data": {"error_msg": messages.incorrect_password}})
         else:
             return Response(status=status.HTTP_403_FORBIDDEN,
                             data={"data": {"error_msg": messages.user_not_found}})

@@ -1,6 +1,5 @@
 from templates.api.serializers import TemplateSerializer, UserSerializer, ReportSerializer
 from mongo_auth.permissions import AuthenticatedOnly, IsUserAdminOrReadOnly, IsUserAdmin
-from django.contrib.auth.decorators import permission_required
 from templates.api.models import Template, Report
 from rest_framework_mongoengine import viewsets
 from rest_framework.response import Response
@@ -20,8 +19,21 @@ class TemplateViewSet(viewsets.ModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
 
-    def perform_create(self, serializer):
-        serializer.save()
+    def create(self, request, *args, **kwargs):
+        print("!!!!!!")
+        if any([not val for val in request.data.values()]):
+            return Response(data={"data": {"error": "Please provide all fields!"}},
+                            status=status.HTTP_400_BAD_REQUEST)
+        label = request.data.get('label')
+        template_object = Template.objects.filter(label=label)
+        if template_object.count() > 0:
+            return Response(data={"data": {"error": "Template with this label exists!"}},
+                            status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserAPIView(APIView):
@@ -40,7 +52,7 @@ class ReportViewSet(viewsets.ModelViewSet):
     Create and retrieve reports
     """
     permission_classes = [AuthenticatedOnly]
-    queryset = Report.objects.all().order_by('-date')
+    queryset = Report.objects.all()
     serializer_class = ReportSerializer
 
     def create(self, request, *args, **kwargs):
@@ -57,8 +69,8 @@ class ReportViewSet(viewsets.ModelViewSet):
             report_object = request.data
             # If number of fields in template not equal to provided answers - error
             if len(template_object[0]['inputs']) != len(report_object['answers']):
-                return Response({"error": f"Provided wrong number of inputs. Should be "
-                                          f"{len(template_object[0]['inputs'])}"})
+                return Response(data={"data": {"error": f"Provided wrong number of inputs. "
+                                                        f"Should be {len(template_object[0]['inputs'])}"}})
 
             # Add template object to report
             report_object['template'] = TemplateSerializer(template_object[0]).data
@@ -80,12 +92,12 @@ class ReportViewSet(viewsets.ModelViewSet):
         if self.request.user['is_staff'] or self.request.user['is_staff']:
             query = self.request.GET.get('user')
             if query:
-                qs = self.queryset.filter(user__username=query).order_by('-published_date')
-                print(qs)
+                qs = self.queryset.filter(user__username=query)
                 return qs
             return self.queryset
         # Else return reports of current user
-        return self.queryset.filter(user=self.request.user).order_by('-published_date')
+        print(self.request.user)
+        return self.queryset.filter(user__username=self.request.user["username"])
 
 
 # @permission_required([IsUserAdmin, AuthenticatedOnly])
@@ -95,8 +107,6 @@ class LoadViewSet(APIView):
     Create and retrieve reports
     """
     permission_classes = [AuthenticatedOnly, IsUserAdmin]
-    # queryset = Report.objects.all()
-    # serializer_class = ReportSerializer
 
     def get(self, request):
         """Download all reports if user is admin"""
