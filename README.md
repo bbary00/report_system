@@ -1,8 +1,17 @@
 # report_system
 Django REST api on mongoengine
 
+### Run project
 
-# Add changes to mongo-auth
+1. python 3.7
+
+2. Create and activate venv 
+
+3. Clone repositoty and install requirements
+
+4. Create file secret_info.py in root directory and add secret info (see in settings.py)
+
+### Add changes to mongo-auth module (venv/lib/python3.7/site-packages/mongo-auth)
 
 1. In mongo-auth/permissions.py add:
 
