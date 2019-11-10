@@ -6,7 +6,7 @@ Django REST api on mongoengine
 
 1. In mongo-auth/permissions.py add:
 
-       class IsAdminUserOrReadOnly(permissions.BasePermission):
+       class IsUserAdminOrReadOnly(permissions.BasePermission):
     
            def has_permission(self, request, view):
                SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
