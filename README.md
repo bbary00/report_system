@@ -30,3 +30,5 @@ Django REST api on mongoengine
                
                      
 2. Change mongo-auth/views.py and mongo-auth/db.py files on ones that are stored in mango_auth_files_to_change folder.
+
+### In front_end directory open index.html
